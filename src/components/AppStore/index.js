@@ -1,4 +1,5 @@
-import {Component} from 'react'
+
+import {useState} from 'react'
 
 import AppItem from '../AppItem'
 import TabItem from '../TabItem'
@@ -292,85 +293,67 @@ const appsList = [
   {
     appId: 39,
     appName: 'DOT',
-    imageUrl: 'https://assets.ccbp.in/frontend/react-js/app-store/food-dot.png',
+    imageUrl:
+      'https://assets.ccbp.in/frontend/react-js/app-store/food-dot.png',
     category: 'FOOD',
   },
 ]
 
-class AppStore extends Component {
-  state = {
-    searchInput: '',
-    activeTabId: tabsList[0].tabId,
+const AppStore = () => {
+  const [searchInput, setSearchInput] = useState('')
+  const [activeTabId, setActiveTabId] = useState(tabsList[0].tabId)
+
+  const onChangeSearchInput = event => {
+    setSearchInput(event.target.value)
   }
 
-  setActiveTabId = tabId => {
-    this.setState({activeTabId: tabId})
-  }
-
-  onChangeSearchInput = event => {
-    this.setState({searchInput: event.target.value})
-  }
-
-  getActiveTabApps = searchedApps => {
-    const {activeTabId} = this.state
-    const filteredApps = searchedApps.filter(
-      eachSearchedApp => eachSearchedApp.category === activeTabId,
-    )
-
-    return filteredApps
-  }
-
-  getSearchResults = () => {
-    const {searchInput} = this.state
-    const searchResults = appsList.filter(eachApp =>
+  const getSearchResults = () =>
+    appsList.filter(eachApp =>
       eachApp.appName.toLowerCase().includes(searchInput.toLowerCase()),
     )
 
-    return searchResults
-  }
+  const getActiveTabApps = searchedApps =>
+    searchedApps.filter(eachApp => eachApp.category === activeTabId)
 
-  render() {
-    const {searchInput, activeTabId} = this.state
-    const searchResults = this.getSearchResults()
-    const filteredApps = this.getActiveTabApps(searchResults)
+  const searchResults = getSearchResults()
+  const filteredApps = getActiveTabApps(searchResults)
 
-    return (
-      <div className="app-container">
-        <div className="app-store">
-          <h1 className="heading">App Store</h1>
-          <div className="search-input-container">
-            <input
-              type="search"
-              placeholder="Search"
-              className="search-input"
-              value={searchInput}
-              onChange={this.onChangeSearchInput}
-            />
-            <img
-              src={SEARCH_ICON_URL}
-              alt="search icon"
-              className="search-icon"
-            />
-          </div>
-          <ul className="tabs-list">
-            {tabsList.map(eachTab => (
-              <TabItem
-                key={eachTab.tabId}
-                tabDetails={eachTab}
-                setActiveTabId={this.setActiveTabId}
-                isActive={activeTabId === eachTab.tabId}
-              />
-            ))}
-          </ul>
-          <ul className="apps-list">
-            {filteredApps.map(eachApp => (
-              <AppItem key={eachApp.appId} appDetails={eachApp} />
-            ))}
-          </ul>
+  return (
+    <div className="app-container">
+      <div className="app-store">
+        <h1 className="heading">App Store</h1>
+        <div className="search-input-container">
+          <input
+            type="search"
+            placeholder="Search"
+            className="search-input"
+            value={searchInput}
+            onChange={onChangeSearchInput}
+          />
+          <img
+            src={SEARCH_ICON_URL}
+            alt="search icon"
+            className="search-icon"
+          />
         </div>
+        <ul className="tabs-list">
+          {tabsList.map(eachTab => (
+            <TabItem
+              key={eachTab.tabId}
+              tabDetails={eachTab}
+              setActiveTabId={setActiveTabId}
+              isActive={activeTabId === eachTab.tabId}
+            />
+          ))}
+        </ul>
+        <ul className="apps-list">
+          {filteredApps.map(eachApp => (
+            <AppItem key={eachApp.appId} appDetails={eachApp} />
+          ))}
+        </ul>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default AppStore

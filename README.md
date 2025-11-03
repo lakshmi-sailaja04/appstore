@@ -45,7 +45,8 @@ npm start    # Start the development server
 
 Through this project, I practiced:
 
-- Using React hooks (`useState`)
+- Building UI using **React functional components**
+- Using React hooks (`useState`) for state management
 - Passing data through props
 - Handling user interactions like search and tab clicks
 - Applying conditional rendering
